@@ -17,7 +17,10 @@ namespace ErrorProviderExample
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+
+            var vm = new Form1ViewModel();
+            
+            Application.Run(new Form1(vm));
         }
     }
 }
