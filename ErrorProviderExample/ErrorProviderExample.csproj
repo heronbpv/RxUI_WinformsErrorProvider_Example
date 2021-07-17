@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWindowsForms>true</UseWindowsForms>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="ReactiveUI" Version="14.1.1" />
+      <PackageReference Include="ReactiveUI.Events.Winforms" Version="14.1.1" />
+      <PackageReference Include="ReactiveUI.Validation" Version="2.1.1" />
+      <PackageReference Include="ReactiveUI.WinForms" Version="14.1.1" />
+    </ItemGroup>
+
+</Project>
