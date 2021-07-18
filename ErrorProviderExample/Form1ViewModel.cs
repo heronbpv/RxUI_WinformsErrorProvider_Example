@@ -1,4 +1,5 @@
 ﻿using System.Reactive;
+using System.Reactive.Linq;
 using ReactiveUI;
 using ReactiveUI.Validation.Extensions;
 using ReactiveUI.Validation.Helpers;
@@ -9,23 +10,6 @@ namespace ErrorProviderExample
     {
         public Form1ViewModel()
         {
-            this.Login =
-                ReactiveCommand
-                    .CreateFromObservable(
-                        execute:
-                        () => this.Logon.Handle(Unit.Default),
-                        canExecute:
-                        this.WhenAnyValue(
-                            property1: vm => vm.User,
-                            property2: vm => vm.Password,
-                            selector:
-                            (u, p) =>
-                                !string.IsNullOrWhiteSpace(u)
-                                && !string.IsNullOrWhiteSpace(p)
-                                && this.ValidationContext.IsValid
-                        )
-                    );
-            
             this.ValidationRule(
                 vm => vm.User,
                 u => !string.IsNullOrWhiteSpace(u),
@@ -45,6 +29,26 @@ namespace ErrorProviderExample
                 pass => pass?.Length > 2,
                 "Password must contain at least three characters."
             );
+
+            //Since this depends on the state of the IsValid property, it must come later;
+            //Is there a way to monitor the validity of the context in real time, as in via observable? Just so the 
+            //order doesn't matter in this case.
+            this.Login =
+                ReactiveCommand
+                    .CreateFromObservable(
+                        execute:
+                        () => this.Logon.Handle(Unit.Default),
+                        canExecute:
+                        this.WhenAnyValue(
+                                property1: vm => vm.User,
+                                property2: vm => vm.Password,
+                                selector:
+                                (u, p) =>
+                                    !string.IsNullOrWhiteSpace(u)
+                                    && !string.IsNullOrWhiteSpace(p)
+                                    && this.ValidationContext.IsValid
+                            )
+                    );
         }
         
         private string user;

@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using DynamicData;
 using DynamicData.Binding;
 using ReactiveUI;
 using ReactiveUI.Validation.Components.Abstractions;
-using ReactiveUI.Validation.States;
 
 namespace ErrorProviderExample
 {
@@ -48,13 +41,16 @@ namespace ErrorProviderExample
                             context =>
                             {
                                 MessageBox.Show("Logged In!");
+
+                                this.tbUser.Text = "";
+                                this.tbPassword.Text = "";
+                                
                                 context.SetOutput(Unit.Default);
                             })
                         .DisposeWith(disposables);
                     
                     //My best take at getting the list of validation errors out of the ValidationContext, so far.
                     //It seems messy, but I took the idea directly from ReactiveValidationObject's ctor though...
-                    //This is probably the source of my problems, see below, so suggestions welcome!
                     var propVals = 
                             this
                                 .ViewModel?
@@ -81,8 +77,6 @@ namespace ErrorProviderExample
                     //However, the fields are starting already marked as error, and in the case of password, only the last
                     //one is being shown. How can I prevent the observable to start in error, and how does one get all errors
                     //associated with a single property?
-                    //Also, it does not seem to be computing both validations for password, as in I can input only 2 characters
-                    //without triggering either the SetError on the provider or IsValid=False on the context. How come? 
                     propVals?
                         .Where(x => x.ContainsPropertyName(nameof(this.ViewModel.User)))
                         .Do(
